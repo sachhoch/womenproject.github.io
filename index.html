@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>World map</title>
+    <meta charset="UTF-8">
+    <script src="jquery.min.js"></script>
+    <link rel="icon" href="earth.png">
+    <script src="d3.min.js"></script>
+    <script src="topojson.min.js"></script>
+    <script src="datamaps.world.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <link rel="stylesheet" href="bootstrap.min.css">
+</head>
+<body style="background: #9FA8DA">
+<div class="container text-center">
+    <h1>World map</h1>
+    <div class="panel panel-default">
+
+        <div id="container" style="position: relative; width: 1100px; height: 700px;"></div>
+    </div>
+</div>
+<footer style="position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 30px;
+  background-color: #f5f5f5;" class="text-center">Réalisé pour un projet d'études.</footer>
+<script>
+    var map = new Datamap({
+        element: document.getElementById('container'),
+        setProjection: function(element) {
+            var projection = d3.geo.equirectangular()
+                .center([23, 50])
+                .rotate([4.4, 0])
+                .scale(800)
+                .translate([element.offsetWidth / 2, element.offsetHeight / 2]);
+            var path = d3.geo.path()
+                .projection(projection);
+
+            return {path: path, projection: projection};
+        },
+        fills: {
+            HIGH: '#1A237E',
+            LOW: '#9FA8DA',
+            MEDIUM: '#5C6BC0',
+            UNKNOWN: 'rgb(0,0,0)',
+            defaultFill: '#E8EAF6'
+        },
+        data: {
+            FRA :{
+                country: "en France",
+                PartdelAideauDeveloppementdedieeaudroitdesfemmes : "0,11",
+                CadrepolitiquepourlegaliteHommesFemmes : "0,55",
+                Representationdesfemmesaugouvernement : "0,767",
+                Noteglobaledelindicealannee2013 : "0,24"
+            },
+            SWE :{
+                country: "en Suède",
+                PartdelAideauDeveloppementdedieeaudroitdesfemmes : "1",
+                CadrepolitiquepourlegaliteHommesFemmes : "0,8",
+                Representationdesfemmesaugouvernement : "0,978",
+                Noteglobaledelindicealannee2013 : "1,1"
+            } ,
+            GBR :{
+                country: "en Royaume-Uni",
+                PartdelAideauDeveloppementdedieeaudroitdesfemmes: "0,60",
+                CadrepolitiquepourlegaliteHommesFemmes : "0,5",
+                Representationdesfemmesaugouvernement : "0,31",
+                Noteglobaledelindicealannee2013 : "0,28"
+            }
+
+        },
+        geographyConfig: {
+            popupTemplate: function(geo, data) {
+                return ['<div class="hoverinfo"><strong>',
+                    'Part de l\'aide au développement dédiée aux droits des femmes ' + data.country,
+                    ':</strong> ' + data.PartdelAideauDeveloppementdedieeaudroitdesfemmes,
+                    '<br><strong>Cadre politique pour l\'égalité hommes femmes ' + data.country,
+                    ':</strong> ' + data.CadrepolitiquepourlegaliteHommesFemmes,
+                    '<br><strong>Representation des femmes au gouvernement ' + data.country,
+                    ':</strong> ' + data.Representationdesfemmesaugouvernement,
+                    '<br><strong>Note globale de l\'indice à l\'année 2013 ' + data.country,
+                    ':</strong> ' + data.Noteglobaledelindicealannee2013,
+                    '</div>'].join('');
+            }
+        }
+    });
+    var countries = Datamap.prototype.worldTopo.objects.world.geometries;
+    for (var i = 0, j = countries.length; i < j; i++) {
+        console.log(countries[i].id, countries[i].properties.name);
+    }
+</script>
+</body>
+</html>
